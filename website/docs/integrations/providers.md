@@ -39,6 +39,7 @@ You need at least one way to connect to an LLM. Use `hermes model` to switch pro
 | **Alibaba Cloud (Coding Plan)** | `ALIBABA_CODING_PLAN_API_KEY` (falls back to `DASHSCOPE_API_KEY`) (provider: `alibaba-coding-plan`, alias: `alibaba_coding`; mainland-China endpoint: `alibaba-coding-plan-cn` with `ALIBABA_CODING_PLAN_CN_API_KEY`, falling back to the shared keys) — separate billing SKU, different endpoint |
 | **Alibaba Cloud (Token Plan)** | `ALIBABA_TOKEN_PLAN_API_KEY` in `~/.hermes/.env` (provider: `alibaba-token-plan`; mainland-China endpoint: `alibaba-token-plan-cn` with `ALIBABA_TOKEN_PLAN_CN_API_KEY`, falling back to the shared key) — Model Studio flat-token tier |
 | **Kilo Code** | `KILOCODE_API_KEY` in `~/.hermes/.env` (provider: `kilocode`) |
+| **ClinePass** | `hermes model` → **ClinePass**, or set `CLINE_API_KEY` (provider: `cline-pass`; alias: `clinepass`; active ClinePass subscription required) |
 | **Xiaomi MiMo** | `XIAOMI_API_KEY` in `~/.hermes/.env` (provider: `xiaomi`, aliases: `mimo`, `xiaomi-mimo`) |
 | **Tencent TokenHub** | `TOKENHUB_API_KEY` in `~/.hermes/.env` (provider: `tencent-tokenhub`, aliases: `tencent`, `tokenhub`, `tencentmaas`) |
 | **Tencent TokenPlan** | `TOKENPLAN_API_KEY` in `~/.hermes/.env` (provider: `tencent-tokenplan`, aliases: `tokenplan`, `tencent-lkeap`; Anthropic Messages endpoint) |
@@ -382,6 +383,26 @@ hermes migrate xai --apply  # rewrite ~/.hermes/config.yaml in place
 ```
 
 **xAI Web Search backend.** When the [Web Search](../user-guide/features/web-search.md) toolset is enabled, `web.backend: xai` routes search through xAI's hosted search endpoint using the same `XAI_API_KEY` / OAuth credentials. No additional setup required if xAI is already configured as a provider.
+
+### ClinePass
+
+Create an API key at [app.cline.bot](https://app.cline.bot) under **Settings → API Keys**,
+then run `hermes model`, select **ClinePass**, and enter the key. An active ClinePass
+subscription is required. Hermes uses `https://api.cline.bot/api/v1` and discovers the
+subscription models from Cline's recommended-models catalog, with a fallback list when
+discovery is unavailable.
+
+The provider ID is `cline-pass` (`clinepass` and `cline_pass` are aliases). Credentials
+use `CLINE_API_KEY`; `CLINEPASS_API_KEY` is also accepted. Keep the full `cline-pass/`
+prefix in model IDs so requests use the subscription billing lane. Auxiliary tasks
+use the selected model by default.
+
+After setup, use `/model` to choose a ClinePass model in an active conversation, or
+switch directly, for example `/model cline-pass:cline-pass/glm-5.3`. The provider
+handles both streaming replies and Cline's wrapped non-streaming completions.
+
+See the [ClinePass guide](https://docs.cline.bot/getting-started/clinepass) for
+subscription details and the current model list.
 
 ### NovitaAI
 
